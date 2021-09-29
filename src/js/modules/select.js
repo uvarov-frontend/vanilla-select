@@ -55,7 +55,7 @@ class Select {
 
 	hasClick() {
 		document.addEventListener('click', (e) => {
-			const btn = e.target.classList.contains(this.select.class.btn);
+			const btn = e.target.closest(`.${this.select.class.btn}`);
 			if (!this.select.show && !btn) return;
 
 			const select = e.target.closest(`.${this.select.class.select.default}`);
@@ -66,7 +66,7 @@ class Select {
 
 			if (!this.select.show && btn) {
 				this.openSelect(select);
-			} else if (this.select.show && btn && e.target !== btnActive) {
+			} else if (this.select.show && btn && btn !== btnActive) {
 				this.closeSelect(selectActive);
 				this.openSelect(select);
 			} else if (this.select.show && !list) {
@@ -80,11 +80,11 @@ class Select {
 
 	createOption(list, btn, customSelect) {
 		const selected = customSelect.querySelector('option[selected]');
-		if (!selected) customSelect.childNodes[0].setAttribute('selected', 'selected');
+		if (!selected) customSelect.options[0].setAttribute('selected', 'selected');
 
 		// eslint-disable-next-line no-plusplus
-		for (let i = 0; i < customSelect.childNodes.length; i++) {
-			const optionDefault = customSelect.childNodes[i];
+		for (let i = 0; i < customSelect.options.length; i++) {
+			const optionDefault = customSelect.options[i];
 			const option = document.createElement('li');
 
 			option.className = this.select.class.option.default;
