@@ -1,0 +1,25 @@
+extends ../layout
+
+block variables
+	- var title = 'Главная страница';
+
+block content
+	h1.text-center VANILLA-SELECT DEMO
+	p.text-center Плагин кастомизированного выпадающего списка на ванильном JS.
+	section.section
+		h2 Single select
+		h3 selected and disabled
+		.grid
+			select(name="select-one")
+				option(value="value-one") Первый пункт
+				option(value="value-two" selected) Второй пункт
+				option(value="value-three") Третий пункт
+				option(value="value-four" disabled) Четвертый пункт
+				option(value="value-five") Пятый пункт
+		h3 selected of hidden
+		.grid
+			select(name="select-two")
+				option(value="no-value" hidden) Выберите пункт...
+				option(value="value-one") Первый пункт
+				option(value="value-two") Второй пункт
+				option(value="value-three") Третий пункт
