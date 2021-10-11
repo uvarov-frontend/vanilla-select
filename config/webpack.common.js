@@ -45,8 +45,7 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-			'~': PATHS.src,
-			img: `${PATHS.src}/${PATHS.assets.img}`,
+			'@': PATHS.src,
 		},
 	},
 	optimization: {

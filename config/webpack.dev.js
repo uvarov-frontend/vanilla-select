@@ -16,15 +16,20 @@ module.exports = merge(common, {
 		filename: `${common.externals.paths.assets.js}/[name].js`,
 	},
 	devServer: {
-		publicPath: '/',
-		index: 'index.html',
-		port: 3000,
-		open: true,
+		open: ['index.html'],
 		hot: true,
 		historyApiFallback: true,
-		clientLogLevel: 'silent',
-		stats: 'minimal',
-		overlay: true,
+		compress: true,
+		devMiddleware: {
+			index: true,
+			publicPath: '/',
+			// serverSideRender: true,
+			// writeToDisk: true,
+		},
+		client: {
+			logging: 'info',
+			overlay: true,
+		},
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
