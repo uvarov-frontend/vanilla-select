@@ -20,12 +20,6 @@ module.exports = merge(common, {
 		hot: true,
 		historyApiFallback: true,
 		compress: true,
-		devMiddleware: {
-			index: true,
-			publicPath: '/',
-			// serverSideRender: true,
-			// writeToDisk: true,
-		},
 		client: {
 			logging: 'info',
 			overlay: true,

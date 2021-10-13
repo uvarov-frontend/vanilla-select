@@ -4,7 +4,6 @@ const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlBeautifyPlugin = require('@nurminen/html-beautify-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const CompressionPlugin = require('compression-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -54,9 +53,6 @@ module.exports = merge(common, {
 				},
 			},
 			replace: ['type="text/javascript"'],
-		}),
-		new ImageminPlugin({
-			test: /\.(jpe?g|png|gif|svg)$/i,
 		}),
 	],
 });
