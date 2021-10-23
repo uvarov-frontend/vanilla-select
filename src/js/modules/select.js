@@ -1,8 +1,8 @@
 class Select {
 	constructor(option) {
 		this.select = {
-			custom: {
-				selector: option?.select?.custom?.selector ? option.select.custom.selector : 'select',
+			default: {
+				selector: option?.select?.default?.selector ? option.select.default.selector : 'select',
 				elements: undefined,
 			},
 			class: {
@@ -12,6 +12,9 @@ class Select {
 					show: option?.select?.class?.select?.show ? option.select.class.select.show : 'vanilla-select_show',
 				},
 				btn: option?.select?.class?.btn ? option.select.class.btn : 'vanilla-select__btn',
+				wrapper: option?.select?.class?.wrapper ? option.select.class.wrapper : 'vanilla-select__wrapper',
+				label: option?.select?.class?.label ? option.select.class.label : 'vanilla-select__label',
+				group: option?.select?.class?.group ? option.select.class.group : 'vanilla-select__group',
 				list: option?.select?.class?.list ? option.select.class.list : 'vanilla-select__list',
 				option: {
 					default: option?.select?.class?.option?.default ? option.select.class.option.default : 'vanilla-select__option',
@@ -59,6 +62,7 @@ class Select {
 			if (!this.select.show && !btn) return;
 
 			const select = e.target.closest(`.${this.select.class.select.default}`);
+			const label = e.target.closest(`.${this.select.class.label}`);
 			const list = e.target.closest(`.${this.select.class.list}`);
 			const option = e.target.closest(`.${this.select.class.option.default}`);
 			const selectActive = document.querySelector(`.${this.select.class.select.default}.${this.select.class.select.show}`);
@@ -69,7 +73,7 @@ class Select {
 			} else if (this.select.show && btn && btn !== btnActive) {
 				this.closeSelect(selectActive);
 				this.openSelect(select);
-			} else if (this.select.show && !list) {
+			} else if (this.select.show && !list && !label) {
 				this.closeSelect(selectActive);
 			} else if (this.select.show && list && option) {
 				this.optionSelected(e.target);
@@ -78,13 +82,14 @@ class Select {
 		});
 	}
 
-	createOption(list, btn, customSelect) {
-		const selected = customSelect.querySelector('option[selected]');
-		if (!selected) customSelect.options[0].setAttribute('selected', 'selected');
+	createOption(list, btn, defaultParent) {
+		const child = defaultParent.childNodes;
 
 		// eslint-disable-next-line no-plusplus
-		for (let i = 0; i < customSelect.options.length; i++) {
-			const optionDefault = customSelect.options[i];
+		for (let i = 0; i < child.length; i++) {
+			if (child[i].localName !== 'option') return;
+
+			const optionDefault = child[i];
 			const option = document.createElement('li');
 
 			option.className = this.select.class.option.default;
@@ -109,16 +114,51 @@ class Select {
 		}
 	}
 
+	hasOptionSelected(defaultSelect) {
+		const selected = defaultSelect.querySelector('option[selected]');
+		if (selected) return;
+
+		const options = defaultSelect.querySelectorAll('option');
+		options[0].setAttribute('selected', 'selected');
+	}
+
+	createListSelect(wrapper, btn, defaultParent) {
+		const list = document.createElement('ul');
+		list.className = this.select.class.list;
+		wrapper.append(list);
+
+		this.createOption(list, btn, defaultParent);
+	}
+
+	createGroupSelect(wrapper, btn, defaultSelect) {
+		const optgroup = defaultSelect.querySelectorAll('optgroup');
+
+		if (!optgroup.length) return;
+
+		optgroup.forEach((defaultGroup) => {
+			const group = document.createElement('div');
+			group.className = this.select.class.group;
+			wrapper.append(group);
+
+			const label = document.createElement('b');
+			label.className = this.select.class.label;
+			label.innerText = defaultGroup.getAttribute('label');
+			group.append(label);
+
+			this.createListSelect(group, btn, defaultGroup);
+		});
+	}
+
 	createSelect() {
-		this.select.custom.elements.forEach((customSelect) => {
+		this.select.default.elements.forEach((defaultSelect) => {
 			const parent = document.createElement('div');
 			parent.className = this.select.class.parent;
-			customSelect.after(parent);
-			parent.append(customSelect);
+			defaultSelect.after(parent);
+			parent.append(defaultSelect);
 
 			const select = document.createElement('div');
 			select.className = this.select.class.select.default;
-			select.className += ` ${customSelect.className}`;
+			select.className += ` ${defaultSelect.className}`;
 			parent.append(select);
 
 			const btn = document.createElement('button');
@@ -126,20 +166,22 @@ class Select {
 			btn.setAttribute('type', 'button');
 			select.append(btn);
 
-			const list = document.createElement('ul');
-			list.className = this.select.class.list;
-			select.append(list);
+			const wrapper = document.createElement('div');
+			wrapper.className = this.select.class.wrapper;
+			select.append(wrapper);
 
-			this.createOption(list, btn, customSelect);
+			this.hasOptionSelected(defaultSelect);
+			this.createListSelect(wrapper, btn, defaultSelect);
+			this.createGroupSelect(wrapper, btn, defaultSelect);
 		});
 	}
 
 	hasSelector() {
-		this.select.custom.elements = document.querySelectorAll(this.select.custom.selector);
-		if (!this.select.custom.elements[0]) return;
+		this.select.default.elements = document.querySelectorAll(this.select.default.selector);
+		if (!this.select.default.elements[0]) return;
 
 		// eslint-disable-next-line no-return-assign
-		this.select.custom.elements.forEach((select) => select.style.display = 'none');
+		this.select.default.elements.forEach((select) => select.style.display = 'none');
 
 		this.createSelect();
 		this.hasClick();

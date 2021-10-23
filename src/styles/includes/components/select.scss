@@ -23,7 +23,7 @@
 			}
 		}
 
-		& .vanilla-select__list {
+		& .vanilla-select__wrapper {
 			z-index: 1;
 			visibility: visible;
 			opacity: 1;
@@ -67,10 +67,8 @@
 		}
 	}
 
-	&__list {
+	&__wrapper {
 		background-color: white;
-		list-style-type: none;
-		padding: 0;
 		margin: 5px 0 0;
 		border-radius: 5px;
 		width: max-content;
@@ -87,6 +85,27 @@
 		visibility: hidden;
 		opacity: 0;
 		pointer-events: none;
+	}
+
+	&__group {
+		display: block;
+	}
+
+	&__label {
+		display: block;
+		font-size: 14px;
+		line-height: 1.4;
+		font-weight: 600;
+		color: #2b2b2b;
+		padding: 8px;
+		background-color: whitesmoke;
+	}
+
+	&__list {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+		font-size: 0;
 	}
 
 	&__option {
