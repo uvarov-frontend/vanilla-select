@@ -10,6 +10,7 @@ class Select {
 				select: {
 					default: option?.select?.class?.select?.default ? option.select.class.select.default : 'vanilla-select',
 					show: option?.select?.class?.select?.show ? option.select.class.select.show : 'vanilla-select_show',
+					multiple: option?.select?.class?.select?.multiple ? option.select.class.select.multiple : 'vanilla-select_multiple',
 				},
 				btn: option?.select?.class?.btn ? option.select.class.btn : 'vanilla-select__btn',
 				wrapper: option?.select?.class?.wrapper ? option.select.class.wrapper : 'vanilla-select__wrapper',
@@ -24,6 +25,9 @@ class Select {
 				},
 			},
 			show: false,
+			multiple: {
+				text: option?.select?.multiple?.text ? option?.select?.multiple?.text : 'Выбрано:',
+			},
 		};
 	}
 
@@ -37,23 +41,47 @@ class Select {
 		this.select.show = false;
 	}
 
-	optionSelected(option) {
-		if (option.classList.contains(this.select.class.option.disabled)) return;
+	selectedMultipleOption(option, btn, selectArr, selectDefault, selectDefaultActive) {
+		const lastOptionSelected = selectDefault.options[selectDefault.selectedIndex];
 
-		const parent = option.closest(`.${this.select.class.parent}`);
-		const selectDefault = parent.querySelector('select');
-		const btn = parent.querySelector(`.${this.select.class.btn}`);
+		if (lastOptionSelected && lastOptionSelected.hasAttribute('hidden')) lastOptionSelected.removeAttribute('selected');
+		if (option.classList.contains(this.select.class.option.selected)) {
+			option.classList.remove(this.select.class.option.selected);
+			selectDefaultActive.removeAttribute('selected');
+		} else {
+			option.classList.add(this.select.class.option.selected);
+			selectDefaultActive.setAttribute('selected', 'selected');
+		}
+
+		const selectDefaultActiveOptions = selectArr.filter((defaultOption) => defaultOption.hasAttribute('selected'));
+		btn.innerText = `${this.select.multiple.text} ${selectDefaultActiveOptions.length}`;
+	}
+
+	selectedSingleOption(option, btn, parent, selectDefault, selectDefaultActive) {
 		const optionActive = parent.querySelector(`.${this.select.class.option.default}.${this.select.class.option.selected}`);
 
 		optionActive.classList.remove(this.select.class.option.selected);
 		selectDefault.options[selectDefault.selectedIndex].removeAttribute('selected');
 
-		btn.innerText = option.innerText;
 		option.classList.add(this.select.class.option.selected);
-
-		const selectArr = [...selectDefault.options];
-		const selectDefaultActive = selectArr.find((optionDefault) => optionDefault.value === option.dataset.selectValue);
+		btn.innerText = option.innerText;
 		selectDefaultActive.setAttribute('selected', 'selected');
+	}
+
+	selectedOption(select, option) {
+		if (option.classList.contains(this.select.class.option.disabled)) return;
+
+		const parent = option.closest(`.${this.select.class.parent}`);
+		const btn = parent.querySelector(`.${this.select.class.btn}`);
+		const selectDefault = parent.querySelector('select');
+		const selectArr = [...selectDefault.options];
+		const selectDefaultActive = selectArr.find((defaultOption) => defaultOption.value === option.dataset.selectValue);
+
+		if (select.classList.contains(this.select.class.select.multiple)) {
+			this.selectedMultipleOption(option, btn, selectArr, selectDefault, selectDefaultActive);
+		} else {
+			this.selectedSingleOption(option, btn, parent, selectDefault, selectDefaultActive);
+		}
 	}
 
 	hasClick() {
@@ -76,8 +104,8 @@ class Select {
 			} else if (this.select.show && !list && !label) {
 				this.closeSelect(selectActive);
 			} else if (this.select.show && list && option) {
-				this.optionSelected(e.target);
-				this.closeSelect(selectActive);
+				this.selectedOption(select, e.target);
+				if (!select.classList.contains(this.select.class.select.multiple)) this.closeSelect(selectActive);
 			}
 		});
 	}
@@ -89,24 +117,24 @@ class Select {
 		for (let i = 0; i < child.length; i++) {
 			if (child[i].localName !== 'option') return;
 
-			const optionDefault = child[i];
+			const defaultOption = child[i];
 			const option = document.createElement('li');
 
 			option.className = this.select.class.option.default;
-			option.className += ` ${optionDefault.className}`;
-			option.dataset.selectValue = optionDefault.value;
-			option.innerText = optionDefault.innerText;
+			option.className += ` ${defaultOption.className}`;
+			option.dataset.selectValue = defaultOption.value;
+			option.innerText = defaultOption.innerText;
 
-			if (optionDefault.hasAttribute('selected')) {
+			if (defaultOption.hasAttribute('selected')) {
 				option.className += ` ${this.select.class.option.selected}`;
 				btn.innerText = option.innerText;
 			}
 
-			if (optionDefault.hasAttribute('disabled')) {
+			if (defaultOption.hasAttribute('disabled')) {
 				option.className += ` ${this.select.class.option.disabled}`;
 			}
 
-			if (optionDefault.hasAttribute('hidden')) {
+			if (defaultOption.hasAttribute('hidden')) {
 				option.className += ` ${this.select.class.option.hidden}`;
 			}
 
@@ -114,12 +142,16 @@ class Select {
 		}
 	}
 
-	hasOptionSelected(defaultSelect) {
+	hasSelectedOption(defaultSelect, btn) {
 		const selected = defaultSelect.querySelector('option[selected]');
 		if (selected) return;
 
-		const options = defaultSelect.querySelectorAll('option');
-		options[0].setAttribute('selected', 'selected');
+		if (!defaultSelect.hasAttribute('multiple')) {
+			const options = defaultSelect.querySelectorAll('option');
+			options[0].setAttribute('selected', 'selected');
+		} else {
+			btn.innerText = `${this.select.multiple.text} 0`;
+		}
 	}
 
 	createListSelect(wrapper, btn, defaultParent) {
@@ -149,6 +181,11 @@ class Select {
 		});
 	}
 
+	hasMultipleSelect(defaultSelect, select) {
+		if (!defaultSelect.hasAttribute('multiple')) return;
+		select.classList.add(this.select.class.select.multiple);
+	}
+
 	createSelect() {
 		this.select.default.elements.forEach((defaultSelect) => {
 			const parent = document.createElement('div');
@@ -170,18 +207,16 @@ class Select {
 			wrapper.className = this.select.class.wrapper;
 			select.append(wrapper);
 
-			this.hasOptionSelected(defaultSelect);
+			this.hasSelectedOption(defaultSelect, btn);
 			this.createListSelect(wrapper, btn, defaultSelect);
 			this.createGroupSelect(wrapper, btn, defaultSelect);
+			this.hasMultipleSelect(defaultSelect, select);
 		});
 	}
 
 	hasSelector() {
 		this.select.default.elements = document.querySelectorAll(this.select.default.selector);
 		if (!this.select.default.elements[0]) return;
-
-		// eslint-disable-next-line no-return-assign
-		this.select.default.elements.forEach((select) => select.style.display = 'none');
 
 		this.createSelect();
 		this.hasClick();

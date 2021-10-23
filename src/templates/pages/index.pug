@@ -28,8 +28,8 @@ block content
 			select(name="select-three")
 				option(value="zero-value") Нулевой пункт
 				optgroup(label="Первая группа")
-					option(value="value-one") Первый пункт
-					option(value="value-two" selected) Второй пункт
+					option(value="value-one" selected) Первый пункт
+					option(value="value-two") Второй пункт
 					option(value="value-three") Третий пункт
 				optgroup(label="Вторая группа")
 					option(value="value-four") Четвертый пункт
@@ -39,3 +39,16 @@ block content
 				optgroup(label="Третья группа")
 					option(value="value-eight") Восьмой пункт
 					option(value="value-nine" hidden) Девятый пункт
+		h3 multiple option
+		.grid
+			select(name="select-three" multiple)
+				option(value="value-one") Первый пункт
+				option(value="value-two") Второй пункт
+				option(value="value-three") Третий пункт
+				optgroup(label="Группа")
+					option(value="value-four") Четвертый пункт
+					option(value="value-five" disabled) Пятый пункт
+					option(value="value-six") Шестой пункт
+					option(value="value-seven") Седьмой пункт
+					option(value="value-eight") Восьмой пункт
+					option(value="value-nine") Девятый пункт
