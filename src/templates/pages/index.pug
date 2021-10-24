@@ -1,14 +1,14 @@
 extends ../layout
 
 block variables
-	- var title = 'Главная страница';
+	- const title = 'Главная страница';
 
 block content
 	h1.text-center VANILLA-SELECT DEMO
 	p.text-center Плагин кастомизированного выпадающего списка на ванильном JS.
 	section.section
-		h2 Single select
-		h3 selected and disabled
+		h2 Single option
+		h3 Selected and disabled
 		.grid
 			select(name="select-one")
 				option(value="value-one") Первый пункт
@@ -16,14 +16,14 @@ block content
 				option(value="value-three") Третий пункт
 				option(value="value-four" disabled) Четвертый пункт
 				option(value="value-five") Пятый пункт
-		h3 selected of hidden
+		h3 Selected of hidden
 		.grid
 			select(name="select-two")
 				option(value="no-value" hidden) Выберите пункт...
 				option(value="value-one") Первый пункт
 				option(value="value-two") Второй пункт
 				option(value="value-three") Третий пункт
-		h3 group option
+		h3 Group option
 		.grid
 			select(name="select-three")
 				option(value="zero-value") Нулевой пункт
@@ -39,7 +39,19 @@ block content
 				optgroup(label="Третья группа")
 					option(value="value-eight") Восьмой пункт
 					option(value="value-nine" hidden) Девятый пункт
-		h3 multiple option
+		h3 Search option
+		.grid
+			select(name="select-three" autocomplete="on")
+				option(value="no-value" hidden) Выберите пункт...
+				optgroup(label="Первая группа")
+					option(value="value-one") Первый пункт
+					option(value="value-two") Второй пункт
+				optgroup(label="Вторая группа")
+					option(value="value-three") Третий пункт
+					option(value="value-four") Четвертый пункт
+					option(value="value-five") Пятый пункт
+					option(value="value-six") Шестой пункт
+		h2 Multiple option
 		.grid
 			select(name="select-three" multiple)
 				option(value="value-one") Первый пункт
@@ -52,3 +64,4 @@ block content
 					option(value="value-seven") Седьмой пункт
 					option(value="value-eight") Восьмой пункт
 					option(value="value-nine") Девятый пункт
+
