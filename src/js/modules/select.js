@@ -171,12 +171,10 @@ class Select {
 
 	createOption(list, btn, defaultParent) {
 		const child = defaultParent.childNodes;
+		const defaultOptions = [...child].filter((option) => option.localName === 'option');
 
-		// eslint-disable-next-line no-plusplus
-		for (let i = 0; i < child.length; i++) {
-			if (child[i].localName !== 'option') return;
-
-			const defaultOption = child[i];
+		for (let i = 0; i < defaultOptions.length; i++) {
+			const defaultOption = defaultOptions[i];
 			const option = document.createElement('li');
 
 			option.className = this.select.class.option.default;

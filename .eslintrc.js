@@ -21,6 +21,7 @@ module.exports = {
 		'no-param-reassign': 'off',
 		'import/extensions': 'off',
 		'prefer-destructuring': ['error', { object: true, array: false }],
+		'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
 		indent: ['error', 'tab', { SwitchCase: 1 }],
 	},
 };
