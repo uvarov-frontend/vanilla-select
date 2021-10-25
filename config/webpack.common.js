@@ -88,10 +88,10 @@ module.exports = {
 			},
 		),
 		new HtmlReplaceWebpackPlugin([
-      {
-        pattern: / data-src="[^"]+"/g,
-        replacement: ''
-      },
-    ])
+			{
+				pattern: / data-src="[^"]+"/g,
+				replacement: '',
+			},
+		]),
 	],
 };
