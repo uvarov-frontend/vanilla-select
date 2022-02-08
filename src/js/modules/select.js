@@ -2,52 +2,52 @@ class Select {
 	constructor(option) {
 		this.select = {
 			default: {
-				selector: option?.select?.default?.selector ? option.select.default.selector : 'select',
+				selector: option?.select?.default?.selector || 'select',
 				elements: undefined,
 			},
 			class: {
-				parent: option?.select?.class?.parent ? option.select.class.parent : 'vanilla-select-wrapper',
+				parent: option?.select?.class?.parent || 'vanilla-select-wrapper',
 				select: {
-					default: option?.select?.class?.select?.default ? option.select.class.select.default : 'vanilla-select',
-					show: option?.select?.class?.select?.show ? option.select.class.select.show : 'vanilla-select_show',
-					multiple: option?.select?.class?.select?.multiple ? option.select.class.select.multiple : 'vanilla-select_multiple',
-					single: option?.select?.class?.select?.single ? option.select.class.select.single : 'vanilla-select_single',
+					default: option?.select?.class?.select?.default || 'vanilla-select',
+					show: option?.select?.class?.select?.show || 'vanilla-select_show',
+					multiple: option?.select?.class?.select?.multiple || 'vanilla-select_multiple',
+					single: option?.select?.class?.select?.single || 'vanilla-select_single',
 				},
-				btn: option?.select?.class?.btn ? option.select.class.btn : 'vanilla-select__btn',
-				popup: option?.select?.class?.popup ? option.select.class.popup : 'vanilla-select__popup',
-				content: option?.select?.class?.content ? option.select.class.content : 'vanilla-select__content',
+				btn: option?.select?.class?.btn || 'vanilla-select__btn',
+				popup: option?.select?.class?.popup || 'vanilla-select__popup',
+				content: option?.select?.class?.content || 'vanilla-select__content',
 				input: {
-					default: option?.select?.class?.input?.default ? option.select.class.input.default : 'vanilla-select__input',
-					active: option?.select?.class?.input?.active ? option.select.class.input.active : 'vanilla-select__input_active',
+					default: option?.select?.class?.input?.default || 'vanilla-select__input',
+					active: option?.select?.class?.input?.active || 'vanilla-select__input_active',
 				},
 				group: {
-					default: option?.select?.class?.group ? option.select.class.group : 'vanilla-select__group',
-					active: option?.select?.class?.group ? option.select.class.group : 'vanilla-select__group_active',
+					default: option?.select?.class?.group || 'vanilla-select__group',
+					active: option?.select?.class?.group || 'vanilla-select__group_active',
 				},
-				label: option?.select?.class?.label ? option.select.class.label : 'vanilla-select__label',
-				list: option?.select?.class?.list ? option.select.class.list : 'vanilla-select__list',
+				label: option?.select?.class?.label || 'vanilla-select__label',
+				list: option?.select?.class?.list || 'vanilla-select__list',
 				option: {
-					default: option?.select?.class?.option?.default ? option.select.class.option.default : 'vanilla-select__option',
-					selected: option?.select?.class?.option?.selected ? option.select.class.option.selected : 'vanilla-select__option_selected',
-					active: option?.select?.class?.option?.active ? option.select.class.option.active : 'vanilla-select__option_active',
-					disabled: option?.select?.class?.option?.disabled ? option.select.class.option.disabled : 'vanilla-select__option_disabled',
-					hidden: option?.select?.class?.option?.hidden ? option.select.class.option.hidden : 'vanilla-select__option_hidden',
+					default: option?.select?.class?.option?.default || 'vanilla-select__option',
+					selected: option?.select?.class?.option?.selected || 'vanilla-select__option_selected',
+					active: option?.select?.class?.option?.active || 'vanilla-select__option_active',
+					disabled: option?.select?.class?.option?.disabled || 'vanilla-select__option_disabled',
+					hidden: option?.select?.class?.option?.hidden || 'vanilla-select__option_hidden',
 				},
 				plug: {
-					default: option?.select?.class?.plug.default ? option.select.class.plug.default : 'vanilla-select__plug',
-					active: option?.select?.class?.plug.active ? option.select.class.plug.active : 'vanilla-select__plug_active',
+					default: option?.select?.class?.plug.default || 'vanilla-select__plug',
+					active: option?.select?.class?.plug.active || 'vanilla-select__plug_active',
 				},
 			},
 			multiple: {
-				text: option?.select?.multiple?.text ? option.select.multiple.text : 'Выбрано:',
+				text: option?.select?.multiple?.text || 'Выбрано:',
 			},
 			search: {
 				input: {
-					type: option?.select?.search?.input?.type ? option.select.search.input.type : 'text',
-					placeholder: option?.select?.search?.input?.placeholder ? option.select.search.input.placeholder : 'Поиск...',
+					type: option?.select?.search?.input?.type || 'text',
+					placeholder: option?.select?.search?.input?.placeholder || 'Поиск...',
 				},
 				plug: {
-					text: option?.select?.search?.plug?.text ? option.select.search.plug.text : 'Нет совпадений...',
+					text: option?.select?.search?.plug?.text || 'Нет совпадений...',
 				},
 			},
 			show: false,
@@ -88,6 +88,7 @@ class Select {
 
 		option.classList.add(this.select.class.option.selected);
 		btn.innerText = option.innerText;
+		btn.className = `${this.select.class.btn} ${defaultSelectActive.className}`;
 		defaultSelectActive.setAttribute('selected', 'selected');
 	}
 
@@ -185,6 +186,7 @@ class Select {
 			if (defaultOption.hasAttribute('selected')) {
 				option.className += ` ${this.select.class.option.selected}`;
 				btn.innerText = option.innerText;
+				btn.className = `${this.select.class.btn} ${defaultOption.className}`;
 			}
 
 			if (defaultOption.hasAttribute('disabled')) {
